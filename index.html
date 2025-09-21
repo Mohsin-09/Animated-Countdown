@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Animated Countdown</title>
-  </head>
-  <body>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
     <div class="counter">
       <div class="nums">
-        <span class="in">10</span>
+        <span>10</span>
         <span>9</span>
         <span>8</span>
         <span>7</span>
@@ -19,17 +19,68 @@
         <span>3</span>
         <span>2</span>
         <span>1</span>
-        <span>0</span>
-      </div>
-      <h4>Get Ready</h4>
+    </div>
+        <h4>Get Ready</h4>
+        
     </div>
 
     <div class="final">
-      <h1>GO</h1>
-      <button id="replay">
-        <span>Replay</span>
-      </button>
+        <h4>Go!</h4>
+        <button id="replay">
+            <span>Replay</span>
+        </button>
     </div>
-    <script src="script.js"></script>
-  </body>
+
+    <script>
+        const counterEl = document.querySelector('.counter');
+        const finalEl = document.querySelector('.final');
+        const nums = document.querySelectorAll('.nums span');
+        const replayBtn = document.querySelector('#replay');
+
+        // Initialize the countdown
+        init();
+
+        function init() {
+            // Reset everything
+            counterEl.classList.remove('hide');
+            finalEl.classList.remove('show');
+            
+            // Clear all classes from numbers
+            nums.forEach(num => {
+                num.classList.remove('in', 'out');
+            });
+            
+            // Start with the first number
+            nums[0].classList.add('in');
+        }
+
+        function runAnimation() {
+            nums.forEach((num, idx) => {
+                num.addEventListener('animationend', (e) => {
+                    if (e.animationName === 'goIn' && idx !== nums.length - 1) {
+                        // Remove 'in' class and add 'out' class
+                        num.classList.remove('in');
+                        num.classList.add('out');
+                    } else if (e.animationName === 'goOut' && num.nextElementSibling) {
+                        // Add 'in' class to next number
+                        num.nextElementSibling.classList.add('in');
+                    } else {
+                        // Animation finished, show final message
+                        counterEl.classList.add('hide');
+                        finalEl.classList.add('show');
+                    }
+                });
+            });
+        }
+
+        // Start the animation
+        runAnimation();
+
+        // Replay button functionality
+        replayBtn.addEventListener('click', () => {
+            init();
+            runAnimation();
+        });
+    </script>
+</body>
 </html>
